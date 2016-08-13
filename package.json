@@ -1,0 +1,32 @@
+{
+  "name": "dungeon-crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jon1701/DungeonCrawler.git"
+  },
+  "author": "Jon1701",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jon1701/DungeonCrawler/issues"
+  },
+  "homepage": "https://github.com/Jon1701/DungeonCrawler#readme",
+  "dependencies": {
+    "babel-core": "^6.13.2",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "classnames": "^2.2.5",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.2",
+    "gulp-webserver": "^0.9.1",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "webpack-stream": "^3.2.0"
+  }
+}
