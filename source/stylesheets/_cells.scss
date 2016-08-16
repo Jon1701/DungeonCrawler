@@ -1,27 +1,64 @@
+@mixin floorbg() {
+  background-image: url('../media/assets/icons/tatami.png');
+}
+
+.cell {
+  background-size: 40px 40px;
+}
+
 .cell-wall {
-  background-color: #333333;
+  background: #333333;
 }
 
 .cell-free {
-  background-color: #FFFFFF;
+  background-image: url('../media/assets/icons/tatami.png');
 }
 
 .cell-player {
-  background-color: #DC143C;
+  @include floorbg();
+  content: url('../media/assets/icons/ninja.png');
 }
 
 .cell-medkit {
-  background-color: #428bca;
+  @include floorbg();
+  content: url('../media/assets/icons/medicine.png');
 }
 
 .cell-weapon {
-  background-color: orange;
+  @include floorbg();
+  content: url('../media/assets/icons/sword.png');
 }
 
 .cell-enemy {
-  background-color: green;
+  @include floorbg();
+  content: url('../media/assets/icons/evil-1.png');
 }
 
 .cell-boss {
-  background-color: purple;
+  @include floorbg();
+  content: url('../media/assets/icons/evil.png');
+}
+
+.cell-teleport {
+  @include floorbg();
+  content: url('../media/assets/icons/layer.png');
+}
+
+.cell-stats {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+}
+
+.stats-playerhealth {
+  content: url('../media/assets/icons/shield.png');
+}
+.stats-playerlevel {
+  content: url('../media/assets/icons/chevron-up.png');
+}
+.stats-weaponlevel {
+  content: url('../media/assets/icons/sword.png');
+}
+.stats-damagepotential {
+  content: url('../media/assets/icons/swords.png');
 }

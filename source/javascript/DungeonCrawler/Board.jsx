@@ -28,7 +28,8 @@ class Board extends React.Component {
     var itemHP = {type: 'item', name: 'medkit', hp: 25};
     var itemWeapon = {type: 'item', name: 'weapon'};
     var enemyBasic = {type: 'enemy', name: 'basic', hp: 50, defaultHP: 50, outDamage: 3};
-    var boss = {type: 'enemy', name: 'boss', hp: 300, defaultHP: 300, outDamage: 30}
+    var boss = {type: 'enemy', name: 'boss', hp: 300, defaultHP: 300, outDamage: 30};
+    var teleport = {type: 'teleport'};
 
     // Board.
     var grid = [
@@ -42,7 +43,7 @@ class Board extends React.Component {
       [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
       [wall,itemWeapon,itemHP,enemyBasic,free,boss,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
       [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,player,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,player,teleport,free,teleport,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
       [wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall],
 
     ]

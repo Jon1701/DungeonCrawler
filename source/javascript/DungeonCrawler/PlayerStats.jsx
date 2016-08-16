@@ -32,15 +32,19 @@ class PlayerStats extends React.Component {
 
           <div className="tbl-row">
             <div className="tbl-cell">
+              <div className="cell-stats stats-playerhealth"></div>
               Player Health
             </div>
             <div className="tbl-cell">
+              <div className="cell-stats stats-playerlevel"></div>
               Player Level
             </div>
             <div className="tbl-cell">
+              <div className="cell-stats stats-weaponlevel"></div>
               Weapon Level
             </div>
             <div className="tbl-cell">
+              <div className="cell-stats stats-damagepotential"></div>
               Damage Potential
             </div>
           </div>

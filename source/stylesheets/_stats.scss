@@ -1,6 +1,7 @@
 .tbl {
   display: table;
-  width: 100%;
+  width: 850px;
+  margin: 0 auto;
 
   .tbl-row {
     display: table-row;
@@ -8,5 +9,6 @@
 
   .tbl-cell {
     display: table-cell;
+    text-align: center;
   }
 }

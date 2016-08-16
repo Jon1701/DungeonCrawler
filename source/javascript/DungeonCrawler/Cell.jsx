@@ -31,6 +31,7 @@ class Cell extends React.Component {
       'cell-weapon': this.props.contents.type == 'item' && this.props.contents.name == 'weapon',
       'cell-enemy': this.props.contents.type == 'enemy',
       'cell-boss': this.props.contents.type == 'enemy' && this.props.contents.name == 'boss',
+      'cell-teleport': this.props.contents.type == 'teleport',
     });
 
     return (

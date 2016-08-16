@@ -36,6 +36,12 @@ gulp.task('jsx', function() {
     .pipe(gulp.dest(destPath + 'javascript/'));
 });
 
+// Media.
+gulp.task('media', function() {
+  gulp.src(srcPath + 'media/**/*')
+    .pipe(gulp.dest(destPath + 'media/'));
+});
+
 // Compile .scss and move.
 gulp.task('stylesheets', function() {
   gulp.src(srcPath + 'stylesheets/**/*')
@@ -75,4 +81,4 @@ gulp.task('watch', function() {
 ////////////////////////////////////////////////////////////////////////////////
 // Default task
 ////////////////////////////////////////////////////////////////////////////////
-gulp.task('default', ['webserver', 'watch', 'jsx', 'stylesheets', 'html']);
+gulp.task('default', ['webserver', 'watch', 'jsx', 'media', 'stylesheets', 'html']);
