@@ -1,0 +1,47 @@
+// React.
+import React from 'react';
+
+// Other libraries.
+import classNames from 'classnames';
+
+////////////////////////////////////////////////////////////////////////////////
+// <GameOver/> component definition
+////////////////////////////////////////////////////////////////////////////////
+class GameOver extends React.Component {
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Component constructor.
+  //////////////////////////////////////////////////////////////////////////////
+  constructor() {
+    super();
+  }
+
+
+  // Reload.
+  tryAgain() {
+    location.reload();
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Component render.
+  //////////////////////////////////////////////////////////////////////////////
+  render() {
+
+    // Classes.
+    var myClasses = classNames({
+      'modal': true,
+      'text-center': true,
+      'hidden': !this.props.loseFlag
+    });
+
+    return (
+      <div className={myClasses}>
+        <h1>Game Over</h1>
+        <button onClick={this.tryAgain.bind(this)}>Try Again</button>
+      </div>
+
+    )
+  }
+}
+
+export default GameOver;

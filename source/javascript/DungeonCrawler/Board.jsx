@@ -4,11 +4,33 @@ import React from 'react';
 // Components.
 import Row from './Row.jsx';
 import PlayerStats from './PlayerStats.jsx';
+import GameOver from './GameOver.jsx';
 
 ////////////////////////////////////////////////////////////////////////////////
 // <Board/> component definition
 ////////////////////////////////////////////////////////////////////////////////
 class Board extends React.Component {
+
+  resetStats() {
+
+    // Reset player stats to default.
+    this.setState({
+      playerHealth: 100,
+      playerLevel: 1,
+      weaponLevel: 1,
+      baseDamage: 10,
+      damage: 10,
+      loseFlag: false
+    })
+
+  }
+
+  callGameOver() {
+
+    this.setState({
+      loseFlag: true
+    })
+  }
 
   //////////////////////////////////////////////////////////////////////////////
   // *** DEBUG ONLY ***
@@ -50,6 +72,7 @@ class Board extends React.Component {
     var boss = {type: 'enemy', name: 'boss', hp: 300, defaultHP: 300, outDamage: 30};
     var teleport = {type: 'teleport', status:'unlocked'};
     var teleportLocked = {type: 'teleport', status:'locked'};
+
 
     // Board.
     var grid = [
@@ -171,7 +194,8 @@ class Board extends React.Component {
       weaponLevel: 1,
       weaponLevelMax: 10,
       baseDamage: 10,
-      damage: 10
+      damage: 10,
+      loseFlag: false
     }
   }
 
@@ -334,6 +358,9 @@ class Board extends React.Component {
       nextCellDirection = 'right';
     }
 
+    // Remove fog of war
+
+
     // Check if the next cell is free.
     var nextFree = isNextCellFree(grid, r, c, nextCellDirection);
 
@@ -406,6 +433,9 @@ class Board extends React.Component {
             this.setState({
               playerHealth: 0
             })
+
+            // Signal game over.
+            this.callGameOver();
           }
 
           // If HP is 0 or negative,
@@ -433,12 +463,10 @@ class Board extends React.Component {
 
         } else if (nextCell['type'] == 'teleport' && nextCell['status'] == 'unlocked') {
 
-          console.log('unlocked')
           var grid = this.resetBoard();
 
-
         } else if (nextCell['type'] == 'teleport' && nextCell['status'] == 'locked') {
-          console.log('locked teleport');
+
         }
 
       }
@@ -471,6 +499,9 @@ class Board extends React.Component {
     return (
       <div className="board">
 
+        <h1 className="text-center">Ninja vs Demons</h1>
+        <h3 className="text-center">Dungeon Crawler</h3>
+
         <div>
           <PlayerStats
             playerHealth={this.state.playerHealth}
@@ -481,7 +512,15 @@ class Board extends React.Component {
             />
         </div>
 
-        {rows}
+        <div className="board-grid">
+          <div>
+            {rows}
+          </div>
+          <div>
+            <GameOver loseFlag={this.state.loseFlag}/>
+          </div>
+        </div>
+
       </div>
     )
   }
