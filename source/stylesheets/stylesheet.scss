@@ -1,7 +1,7 @@
 .board {
   .row {
     clear: both;
-    width: 630px;
+    width: 850px;
     margin: 0 auto;
   }
 
@@ -13,3 +13,6 @@
     float: left;
   }
 }
+
+// Import cells information.
+@import '_cells';
