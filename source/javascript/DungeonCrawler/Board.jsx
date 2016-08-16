@@ -15,11 +15,30 @@ class Board extends React.Component {
   //
   // loads a custom map after <Board/> has mounted.
   //////////////////////////////////////////////////////////////////////////////
-  componentWillMount() {
+  resetBoard(grid) {
 
-    // Dimensions.
-    var nrows = 12;
-    var ncols = 20;
+    var addToGrid = function(grid, freeCells, chance, obj) {
+      // Generate a random location for the object.
+      // Use the freeCells and replace whatever is currently occupying that cell.
+      var randNum = Math.floor(Math.random() * freeCells.length);
+      var r = freeCells[randNum][0];
+      var c = freeCells[randNum][1];
+
+      // If the given chance is 1, add the object to the grid.
+      if (chance == 1) {
+        grid[r][c] = obj;
+      } else {
+
+        // If the chance is not 1, generate a random number, if it is less than
+        if (Math.random() <= chance) {
+          grid[r][c] = obj;
+        }
+
+      }
+
+      return grid
+    }
+
 
     // Board variables.
     var wall = {type: 'wall'};
@@ -29,29 +48,94 @@ class Board extends React.Component {
     var itemWeapon = {type: 'item', name: 'weapon'};
     var enemyBasic = {type: 'enemy', name: 'basic', hp: 50, defaultHP: 50, outDamage: 3};
     var boss = {type: 'enemy', name: 'boss', hp: 300, defaultHP: 300, outDamage: 30};
-    var teleport = {type: 'teleport'};
+    var teleport = {type: 'teleport', status:'unlocked'};
+    var teleportLocked = {type: 'teleport', status:'locked'};
 
     // Board.
     var grid = [
+
       [wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall],
-      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,itemWeapon,itemHP,enemyBasic,free,boss,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,teleportLocked,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,player,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
       [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,player,teleport,free,teleport,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
-      [wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall],
+      [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall]
 
     ]
 
-    // Update state.
-    this.setState({
-      grid: grid
-    })
+    // Array ofthe indices of free cells.
+    var freeCells = [];
+
+    // Add walls.
+    //
+    // 10% chance of a wall being placed on an empty cell.
+    for (var i=0; i<grid.length; i++) {
+      for (var j=0; j<grid[i].length; j++) {
+        if (grid[i][j] == free) {
+
+          if (Math.random() < 0.10) {
+
+            // Add a wall if random number < 0.1
+            grid[i][j] = wall;
+
+          } else {
+
+            // If no wall is stored, store the index of the free cell.
+            freeCells.push([i,j]);
+
+          }
+        }
+      }
+    }
+
+    // Go through the array of free cells, for each cell, generate an item or an enemy.
+    for (var i=0; i<freeCells.length; i++) {
+
+      // Get the row and column of the free cell.
+      var r = freeCells[i][0];
+      var c = freeCells[i][1];
+
+      // Cell will have a 1% chance of being occupied.
+      if (Math.random() <= 0.05) {
+
+        // Geenrate a new random number.
+        var itemChance = Math.random();
+
+        if (itemChance >= 0 && itemChance <= 0.33) {
+          grid[r][c] = itemHP;
+        } else if (itemChance > 0.33 && itemChance <= 0.66) {
+          grid[r][c] = itemWeapon;
+        } else {
+          grid[r][c] = enemyBasic;
+        }
+
+      }
+
+    }
+
+    // Add a boss to the grid with a chance.
+    grid = addToGrid(grid, freeCells, 0.05, boss);
+
+    // Add a teleport to the grid.
+    grid = addToGrid(grid, freeCells, 1, teleport);
+
+    return grid;
+  }
+
+  componentWillMount() {
+    var grid = this.resetBoard();
+
+
+        // Update state.
+        this.setState({
+          grid: grid
+        })
 
   }
 
@@ -317,6 +401,13 @@ class Board extends React.Component {
             playerHealth: this.state.playerHealth - outDamage
           })
 
+          // If player health reaches below 0.
+          if (this.state.playerHealth < 0) {
+            this.setState({
+              playerHealth: 0
+            })
+          }
+
           // If HP is 0 or negative,
           if (hp <= 0) {
 
@@ -335,12 +426,21 @@ class Board extends React.Component {
             grid = setNextCellContents(grid, r, c, nextCellDirection, 'player');
             grid = setCurrentCellContents(grid, r, c, 'free');
 
-            // Reset HP.
+            // Reset HP of the enemy.
             nextCell['hp'] = nextCell['defaultHP']
 
           }
 
+        } else if (nextCell['type'] == 'teleport' && nextCell['status'] == 'unlocked') {
+
+          console.log('unlocked')
+          var grid = this.resetBoard();
+
+
+        } else if (nextCell['type'] == 'teleport' && nextCell['status'] == 'locked') {
+          console.log('locked teleport');
         }
+
       }
 
     }

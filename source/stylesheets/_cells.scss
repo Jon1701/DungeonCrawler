@@ -44,6 +44,11 @@
   content: url('../media/assets/icons/layer.png');
 }
 
+.cell-teleport-locked {
+  @include floorbg();
+  content: url('../media/assets/icons/layers.png');
+}
+
 .cell-stats {
   width: 40px;
   height: 40px;
