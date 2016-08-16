@@ -1,18 +1,37 @@
 // React.
 import React from 'react';
 
+// Other libraries.
+import classNames from 'classnames';
+
+////////////////////////////////////////////////////////////////////////////////
+// <Cell/> component definition
+////////////////////////////////////////////////////////////////////////////////
 class Cell extends React.Component {
 
+  //////////////////////////////////////////////////////////////////////////////
   // Component constructor.
+  //////////////////////////////////////////////////////////////////////////////
   constructor() {
     super();
   }
 
+  //////////////////////////////////////////////////////////////////////////////
   // Component render.
+  //////////////////////////////////////////////////////////////////////////////
   render() {
+
+    // Classes.
+    var myClasses = classNames({
+      'cell': true,
+      'cell-wall': this.props.contents.type == 'wall',
+      'cell-free': this.props.contents.type == 'free',
+      'cell-player': this.props.contents.type == 'player'
+    });
+
     return (
-      <div className="cell">
-        {String(this.props.contents)}
+      <div className={myClasses}>
+        {String(this.props.contents.type)}
       </div>
     )
   }
