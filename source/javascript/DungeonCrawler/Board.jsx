@@ -3,6 +3,7 @@ import React from 'react';
 
 // Components.
 import Row from './Row.jsx';
+import PlayerStats from './PlayerStats.jsx';
 
 ////////////////////////////////////////////////////////////////////////////////
 // <Board/> component definition
@@ -17,21 +18,33 @@ class Board extends React.Component {
   componentWillMount() {
 
     // Dimensions.
-    var nrows = 5;
-    var ncols = 8;
+    var nrows = 12;
+    var ncols = 20;
 
     // Board variables.
     var wall = {type: 'wall'};
     var player = {type: 'player'};
     var free = {type: 'free'};
+    var itemHP = {type: 'item', name: 'medkit', hp: 25};
+    var itemWeapon = {type: 'item', name: 'weapon'};
+    var enemyBasic = {type: 'enemy', name: 'basic', hp: 50, defaultHP: 50, outDamage: 3};
+    var boss = {type: 'enemy', name: 'boss', hp: 300, defaultHP: 300, outDamage: 30}
 
     // Board.
     var grid = [
-      [ wall, wall, wall, wall, wall, wall, wall, wall],
-      [ wall, free, free, free, free, free, free, wall],
-      [ wall, free, free, free, free, free, free, wall],
-      [ wall, player, free, free, free, free, free, wall],
-      [ wall, wall, wall, wall, wall, wall, wall, wall],
+      [wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall],
+      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,itemWeapon,itemHP,enemyBasic,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,itemWeapon,itemHP,enemyBasic,free,boss,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,player,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,free,wall],
+      [wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall],
+
     ]
 
     // Update state.
@@ -55,8 +68,8 @@ class Board extends React.Component {
     super();
 
     // Board dimensions.
-    var nrows = 5;
-    var ncols = 8;
+    var nrows = 12;
+    var ncols = 20;
 
     // Bind the handleKeyPress function to <Board/>
     this.handleKeyPress = this.handleKeyPress.bind(this)
@@ -65,7 +78,15 @@ class Board extends React.Component {
     this.state = {
       nrows: nrows,
       ncols: ncols,
-      grid: Array(nrows).fill(Array(ncols).fill(null))
+      grid: Array(nrows).fill(Array(ncols).fill(null)),
+      playerHealth: 100,
+      playerHealthMax: 100,
+      playerLevel: 1,
+      playerLevelMax: 10,
+      weaponLevel: 1,
+      weaponLevelMax: 10,
+      baseDamage: 10,
+      damage: 10
     }
   }
 
@@ -229,11 +250,98 @@ class Board extends React.Component {
     }
 
     // Check if the next cell is free.
-    // If it is free, move player to that cell, and free up the originating cell.
     var nextFree = isNextCellFree(grid, r, c, nextCellDirection);
+
+    // If it is free, move player to that cell, and free up the originating cell.
     if (nextFree) {
+
       grid = setNextCellContents(grid, r, c, nextCellDirection, 'player');
       grid = setCurrentCellContents(grid, r, c, 'free');
+
+    } else {
+
+      // Get the contents of the next cell.
+      var nextCell = getNextCellContents(grid, r, c, nextCellDirection);
+
+      // If the next cell is an item, check if it is a medkit or a weapon.
+      if(nextCell['type'] == 'item') {
+
+        // Allow movement to next cell.
+        grid = setNextCellContents(grid, r, c, nextCellDirection, 'player');
+        grid = setCurrentCellContents(grid, r, c, 'free');
+
+        // If it is a weapon, increase weapon level.
+        if (nextCell['name'] == 'weapon') {
+
+          // If weapon level is below maximum, increase by 1.
+          if(this.state.weaponLevel < this.state.weaponLevelMax) {
+            this.setState({
+              weaponLevel: this.state.weaponLevel + 1
+            })
+          }
+
+        }
+
+        // If it is a medkit, increase health.
+        if (nextCell['name'] == 'medkit') {
+
+          // If health is below maximum, add HP.
+          if(this.state.playerHealth < this.state.playerHealthMax) {
+            this.setState({
+              playerHealth: this.state.playerHealth + nextCell['hp']
+            });
+          } else {
+            this.setState({
+              playerHealth: this.state.playerHealthMax
+            });
+          }
+
+        }
+
+
+      } else {
+
+        // If it is an enemy
+        if (nextCell['type'] == 'enemy') {
+
+          // Get its hp and outgoing damage.
+          var hp = nextCell['hp'];
+          var outDamage = nextCell['outDamage'];
+
+          // Do damage to the enemy.
+          nextCell['hp'] = nextCell['hp'] - this.state.damage;
+
+          // Player takes damage.
+          this.setState({
+            playerHealth: this.state.playerHealth - outDamage
+          })
+
+          // If HP is 0 or negative,
+          if (hp <= 0) {
+
+            // Increase player level.
+            this.setState({
+              playerLevel: this.state.playerLevel + 1
+            });
+
+            // Recalculate the players damage.
+            // Damage = BaseDamage + PlayerLevel + 5*WeaponLevel
+            this.setState({
+              damage: this.state.baseDamage + this.state.playerLevel + 5*this.state.weaponLevel
+            });
+
+            // Allow movement to next cell.
+            grid = setNextCellContents(grid, r, c, nextCellDirection, 'player');
+            grid = setCurrentCellContents(grid, r, c, 'free');
+
+            // Reset HP.
+            nextCell['hp'] = nextCell['defaultHP']
+
+          }
+
+        }
+      }
+
     }
 
     // Send the updated grid.
@@ -261,6 +369,17 @@ class Board extends React.Component {
 
     return (
       <div className="board">
+
+        <div>
+          <PlayerStats
+            playerHealth={this.state.playerHealth}
+            playerHealthMax={this.state.playerHealthMax}
+            playerLevel={this.state.playerLevel}
+            weaponLevel={this.state.weaponLevel}
+            damage={this.state.damage}
+            />
+        </div>
+
         {rows}
       </div>
     )
